@@ -37,12 +37,24 @@ let $cardArea = $("#card-area");
 
 axios.get(`${BASE_API_URL}/new/shuffle/`).then((response) => {
   deckIDTwo = response.data.deck_id;
+  $button.show();
 });
 
 $button.on("click", function () {
   axios.get(`${BASE_API_URL}${deckIDTwo}/draw/`).then((response) => {
     let cardSrc = response.data.cards[0].image;
+    let angle = Math.random() * 90 - 45;
+    let randomX = Math.random() * 40 - 20;
+    let randomY = Math.random() * 40 - 20;
     console.log(cardSrc, deckIDTwo);
-    $cardArea.append($(`<img src= '${cardSrc}'>`));
+    $cardArea.append(
+      $(`<img>`, {
+        src: cardSrc,
+        css: {
+          transform: `translate(${randomX}px,${randomY}px) rotate(${angle}deg)`,
+        },
+      })
+    );
+    if (response.data.remaining === 0) $button.remove();
   });
 });
